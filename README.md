@@ -21,7 +21,10 @@ StockTrend is a Python-based application that allows users to fetch real-time an
 - Second screen to display statistics and graphs
 
 ## Data Collection and Storage Plan (Ahmed)
-The program will use an online API such as yfinance to fetch stock data. The data will include daily stock prices like open, close, high, and low values. This data will be stored in CSV files locally. Organizing the data this way will make it easier to access and analyze later.
+- Fetch historical stock price data from a freely available online source
+- Validate user inputs and handle errors gracefully within the interface
+- Save the downloaded data locally in a structured file format for later use
+- Avoid redundant downloads by checking if data has already been saved
 
 ## Data Analysis and Visualization Plan (Vishalkiran)
 The program will analyze stock data by calculating average price, daily returns, and trends over time. It will also identify increases or decreases in stock performance. For visualization, matplotlib will be used to generate line graphs showing stock price changes and moving averages.
