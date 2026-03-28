@@ -2,7 +2,7 @@
 
 ## Authors
 Vishalkiran Raichur  
-Partner Name
+ahmed sonmez
 
 ## Project Description
 This project is a Python-based application that allows users to fetch stock market data from the internet and analyze trends over time. The program will let users input a stock ticker and select a date range to view price changes. It will calculate simple statistics such as average price, highest and lowest values, and percentage change. The application will also generate visual graphs to help users understand stock trends more clearly. Overall, the goal is to create an interactive and user-friendly tool for exploring stock market behavior.
