@@ -3,6 +3,52 @@
 {% block title %}Home - Stocktrend{% endblock %}
 
 {% block content %}
-    <h2>Home (placeholder)</h2>
-    <p>This is home page. the fetch and the cache library will appear here</p>
+    <h2>Fetch a stock</h2>
+    <form method="POST" action="{{ url_for('home.fetch') }}" class="fetch-form">
+        <label>
+            Ticker
+            <input type="text" name="ticker" placeholder="e.g. AAPL" required maxlength="10" autocomplete="off" autofocus>
+        </label>
+        <label>
+            Date range
+            <select name="range_key">
+                {% for key, info in range_presets.items() %}
+                    <option value="{{ key }}">
+                        {{ info.label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+        <button type="submit">Fetch</button>
+    </form>
+    
+    <h2>Cached library</h2>
+    {% if cached %}
+        <table class="cached-library">
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Range</th>
+                    <th>Rows</th>
+                    <th>Fetched</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in cached %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('detail.detail', ticker=entry.ticker, range_key=entry.range_key) }}">
+                                {{ entry.ticker }}
+                            </a>
+                        </td>
+                        <td>{{ entry.range_label }}</td>
+                        <td>{{ entry.rows }}</td>
+                        <td>{{ entry.fetched_at.strftime("%Y-%m-%d %H:%M") }}</td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No cached datasets yet. Fetch one above.</p>
+    {% endif %}
 {% endblock %}
