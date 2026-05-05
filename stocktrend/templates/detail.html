@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ ticker }} Analysis</h2>
+
+<ul>
+    <li>Latest Price: {{ analysis.latest_price }}</li>
+    <li>Average Price: {{ analysis.avg_price }}</li>
+    <li>Max Price: {{ analysis.max_price }}</li>
+    <li>Min Price: {{ analysis.min_price }}</li>
+    <li>% Change: {{ analysis.percent_change }}%</li>
+    <li>Avg Daily Return: {{ analysis.avg_daily_return }}%</li>
+    <li>Volatility: {{ analysis.volatility }}%</li>
+    <li>Trend: {{ analysis.trend }}</li>
+</ul>
+
+<img src="{{ url_for('static', filename=plot_path) }}" width="600">
+
+{% endblock %}
