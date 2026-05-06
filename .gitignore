@@ -14,3 +14,5 @@ data/
 # IDE
 .vscode/
 .idea/
+
+stocktrend/static/plots/
