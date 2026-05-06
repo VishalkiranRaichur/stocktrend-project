@@ -1,63 +1,151 @@
-{% extends "base.html"%}
+{% extends "base.html" %}
 
-{% block title %}Home - Stocktrend{% endblock %}
+{% block title %}Home · StockTrend{% endblock %}
 
 {% block content %}
-    <h2>Fetch a stock</h2>
-    <form method="POST" action="{{ url_for('home.fetch') }}" class="fetch-form">
-        <label>
-            Ticker
-            <input type="text" name="ticker" placeholder="e.g. AAPL" required maxlength="10" autocomplete="off" autofocus>
-        </label>
-        <label>
-            Date range
-            <select name="range_key">
-                {% for key, info in range_presets.items() %}
-                    <option value="{{ key }}">
-                        {{ info.label }}
-                    </option>
-                {% endfor %}
-            </select>
-        </label>
-        <button type="submit">Fetch</button>
-    </form>
-    
-    <h2>Cached library</h2>
-    {% if cached %}
-        <table class="cached-library">
-            <thead>
-                <tr>
-                    <th>Ticker</th>
-                    <th>Range</th>
-                    <th>Rows</th>
-                    <th>Fetched</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for entry in cached %}
-                    <tr>
-                        <td>
-                            <a href="{{ url_for('detail.detail', ticker=entry.ticker, range_key=entry.range_key) }}">
-                                {{ entry.ticker }}
-                            </a>
-                        </td>
-                        <td>{{ entry.range_label }}</td>
-                        <td>{{ entry.rows }}</td>
-                        <td>{{ entry.fetched_at.strftime("%Y-%m-%d %H:%M") }}</td>
-                        <td class="row-actions">
-                            <form method="POST" action="{{ url_for('home.refresh', ticker=entry.ticker, range_key=entry.range_key) }}">
-                                <button type="submit" class="btn-secondary">Refresh</button>
-                            </form>
-                            <form method="POST" action="{{ url_for('home.delete', ticker=entry.ticker, range_key=entry.range_key) }}" onsubmit="return confirm('Delete {{ entry.ticker }} ({{ entry.range_label }})?');">
-                                <button type="submit" class="btn-danger">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
+
+<!-- HERO -->
+<section class="page-hero">
+    <p class="eyebrow">Market data</p>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-lede">Fetch OHLCV history and open cached symbols for charts and stats.</p>
+</section>
+
+<!-- FETCH CARD -->
+<section class="card fetch-card" aria-labelledby="fetch-heading">
+    <div class="card-header">
+        <h2 id="fetch-heading" class="card-title">Fetch a stock</h2>
+        <p class="card-subtitle">Enter a ticker and choose how far back to pull.</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('home.fetch') }}" class="fetch-form" id="fetch-stock-form">
+        <div class="fetch-fields">
+            <label class="field">
+                <span class="field-label">Ticker</span>
+                <input type="text" name="ticker" placeholder="e.g. AAPL" required maxlength="10" autocomplete="off" autofocus>
+            </label>
+
+            <label class="field">
+                <span class="field-label">Date range</span>
+                <select name="range_key">
+                    {% for key, info in range_presets.items() %}
+                        <option value="{{ key }}">{{ info.label }}</option>
                     {% endfor %}
-            </tbody>
-        </table>
+                </select>
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="fetch-submit-btn" data-default-label="Fetch data">
+            Fetch data
+        </button>
+    </form>
+</section>
+
+<!-- COMPARE TWO CACHED STOCKS -->
+{% if cached|length >= 2 %}
+<section class="card compare-section" aria-labelledby="compare-heading">
+    <div class="card-header">
+        <h2 id="compare-heading" class="card-title">Compare cached stocks</h2>
+        <p class="card-subtitle">Pick any two rows from your library. Charts use overlapping dates when possible.</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('home.compare_view') }}" class="fetch-form compare-form" id="compare-form">
+        <div class="compare-fields">
+            <label class="field">
+                <span class="field-label">First symbol</span>
+                <select name="stock_a" required>
+                    <option value="" disabled selected>Choose cache…</option>
+                    {% for entry in cached %}
+                        <option value="{{ entry.ticker }}|{{ entry.range_key }}">
+                            {{ entry.ticker }} — {{ entry.range_label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="field">
+                <span class="field-label">Second symbol</span>
+                <select name="stock_b" required>
+                    <option value="" disabled selected>Choose cache…</option>
+                    {% for entry in cached %}
+                        <option value="{{ entry.ticker }}|{{ entry.range_key }}">
+                            {{ entry.ticker }} — {{ entry.range_label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-compare">Compare</button>
+    </form>
+</section>
+{% endif %}
+
+<!-- LIBRARY -->
+<section class="library-section" aria-labelledby="library-heading">
+    <div class="section-head">
+        <h2 id="library-heading" class="section-title">Cached library</h2>
+        <p class="section-hint">Recently saved datasets on disk.</p>
+    </div>
+
+    {% if cached %}
+        <div class="table-wrap card table-card">
+            <table class="data-table cached-library">
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Range</th>
+                        <th class="num">Rows</th>
+                        <th>Fetched</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in cached %}
+                        <tr>
+                            <td>
+                                <a class="ticker-link"
+                                   href="{{ url_for('detail.detail', ticker=entry.ticker, range_key=entry.range_key) }}">
+                                    {{ entry.ticker }}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="range-pill">{{ entry.range_label }}</span>
+                            </td>
+                            <td class="num">{{ entry.rows }}</td>
+                            <td class="muted">
+                                {{ entry.fetched_at.strftime("%Y-%m-%d %H:%M") }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <p>No cached datasets yet. Fetch one above.</p>
+        <!-- EMPTY STATE -->
+        <div class="empty-state card empty-state--polished">
+            <div class="empty-state-visual"></div>
+            <p class="empty-title">No saved datasets yet</p>
+            <p class="empty-text">
+                Fetch a ticker above to pull data and store it locally.
+            </p>
+        </div>
     {% endif %}
+</section>
+
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+(function () {
+    var form = document.getElementById("fetch-stock-form");
+    var btn = document.getElementById("fetch-submit-btn");
+
+    if (!form || !btn) return;
+
+    var defaultLabel = btn.getAttribute("data-default-label");
+
+    form.addEventListener("submit", function () {
+        btn.disabled = true;
+        btn.textContent = "Fetching...";
+    });
+})();
+</script>
 {% endblock %}

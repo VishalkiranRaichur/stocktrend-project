@@ -1,19 +1,146 @@
 {% extends "base.html" %}
 
+{% block title %}{{ ticker }} · StockTrend{% endblock %}
+
+{% block app_shell_class %} app-shell--detail{% endblock %}
+
+{% block top_nav_links %}
+<a href="{{ url_for('home.home') }}" class="nav-link nav-link-back">← Back to Dashboard</a>
+{% endblock %}
+
 {% block content %}
-<h2>{{ ticker }} Analysis</h2>
+{# Bands for hero styling match simple momentum copy (±2%). #}
+{% set pc = analysis.percent_change %}
+{% if pc > 2 %}
+    {% set momentum = "up" %}
+{% elif pc < -2 %}
+    {% set momentum = "down" %}
+{% else %}
+    {% set momentum = "flat" %}
+{% endif %}
 
-<ul>
-    <li>Latest Price: {{ analysis.latest_price }}</li>
-    <li>Average Price: {{ analysis.avg_price }}</li>
-    <li>Max Price: {{ analysis.max_price }}</li>
-    <li>Min Price: {{ analysis.min_price }}</li>
-    <li>% Change: {{ analysis.percent_change }}%</li>
-    <li>Avg Daily Return: {{ analysis.avg_daily_return }}%</li>
-    <li>Volatility: {{ analysis.volatility }}%</li>
-    <li>Trend: {{ analysis.trend }}</li>
-</ul>
+<section class="detail-hero card detail-hero-card" aria-labelledby="detail-ticker-heading">
+    <div class="detail-title-row detail-hero-row">
+        <div class="detail-hero-left">
+            <p class="eyebrow">Symbol</p>
+            <h1 id="detail-ticker-heading" class="detail-ticker">{{ ticker }}</h1>
+            <p class="detail-hero-meta">Cached stock analysis · local market snapshot</p>
+            <div class="detail-hero-badges">
+                {% if momentum == "up" %}
+                    <span class="trend-badge trend-badge-up" title="Trend from analysis">{{ analysis.trend }}</span>
+                {% elif momentum == "down" %}
+                    <span class="trend-badge trend-badge-down" title="Trend from analysis">{{ analysis.trend }}</span>
+                {% else %}
+                    <span class="trend-badge trend-badge-neutral" title="Trend from analysis">{{ analysis.trend }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="detail-hero-spotlight" aria-label="Latest price spotlight">
+            <p class="detail-hero-spotlight-label">Latest close</p>
+            <p class="detail-hero-price">${{ analysis.latest_price }}</p>
+            <p class="detail-change detail-hero-change {% if momentum == 'up' %}is-up{% elif momentum == 'down' %}is-down{% else %}is-neutral{% endif %}">
+                {% if momentum == "up" %}▲{% elif momentum == "down" %}▼{% else %}◇{% endif %}
+                {{ analysis.percent_change }}%
+                <span class="change-label">over selected range</span>
+            </p>
+        </div>
+    </div>
+</section>
 
-<img src="{{ url_for('static', filename=plot_path) }}" width="600">
+<div class="detail-layout">
+    <div class="detail-layout-main">
+        <section class="detail-chart-shell card card--chart-focus" aria-labelledby="chart-heading">
+            <header class="chart-card-header">
+                <div>
+                    <h2 id="chart-heading" class="chart-card-title">Price Movement</h2>
+                    <p class="chart-card-sub">{{ ticker }} · close and moving averages</p>
+                </div>
+            </header>
+            <div class="chart-metric-strip" role="group" aria-label="Key metrics for this range">
+                <div class="chart-metric">
+                    <span class="chart-metric-label">Latest close</span>
+                    <span class="chart-metric-value">${{ analysis.latest_price }}</span>
+                </div>
+                <div class="chart-metric">
+                    <span class="chart-metric-label">Percent change</span>
+                    <span class="chart-metric-value {% if momentum == 'up' %}chart-metric-value--up{% elif momentum == 'down' %}chart-metric-value--down{% else %}chart-metric-value--neutral{% endif %}">{{ analysis.percent_change }}%</span>
+                </div>
+                <div class="chart-metric">
+                    <span class="chart-metric-label">Avg daily return</span>
+                    <span class="chart-metric-value">{{ analysis.avg_daily_return }}%</span>
+                </div>
+                <div class="chart-metric">
+                    <span class="chart-metric-label">Volatility</span>
+                    <span class="chart-metric-value">{{ analysis.volatility }}%</span>
+                </div>
+            </div>
+            <div class="chart-figure chart-figure--plotly">
+                <div
+                    class="plotly-chart-host"
+                    role="img"
+                    aria-label="Interactive price chart for {{ ticker }}"
+                >
+                    {{ plot_chart_html|safe }}
+                </div>
+            </div>
+        </section>
+    </div>
 
+    <aside class="detail-layout-aside" aria-label="Statistics and insight">
+        <section class="detail-aside-block" aria-labelledby="stats-heading">
+            <h2 id="stats-heading" class="detail-aside-heading">Statistics</h2>
+            <div class="stats-grid stats-grid--sidebar">
+                <article class="stat-card stat-card--compact">
+                    <h3 class="stat-label">Average price</h3>
+                    <p class="stat-value">${{ analysis.avg_price }}</p>
+                </article>
+                <article class="stat-card stat-card--compact">
+                    <h3 class="stat-label">Max price</h3>
+                    <p class="stat-value">${{ analysis.max_price }}</p>
+                </article>
+                <article class="stat-card stat-card--compact">
+                    <h3 class="stat-label">Min price</h3>
+                    <p class="stat-value">${{ analysis.min_price }}</p>
+                </article>
+                <article class="stat-card stat-card--compact">
+                    <h3 class="stat-label">Percent change</h3>
+                    <p class="stat-value {% if momentum == 'up' %}stat-pos{% elif momentum == 'down' %}stat-neg{% else %}stat-neutral{% endif %}">{{ analysis.percent_change }}%</p>
+                </article>
+                <article class="stat-card stat-card--compact">
+                    <h3 class="stat-label">Avg daily return</h3>
+                    <p class="stat-value">{{ analysis.avg_daily_return }}%</p>
+                </article>
+                <article class="stat-card stat-card--compact">
+                    <h3 class="stat-label">Volatility</h3>
+                    <p class="stat-value">{{ analysis.volatility }}%</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="insight-card card insight-card--sidebar" aria-labelledby="insight-heading">
+            <h2 id="insight-heading" class="insight-title">Market Insight</h2>
+            <div class="insight-body">
+                <p class="insight-lead">
+                    {% if pc > 2 %}
+                        Over this range, <strong>{{ ticker }}</strong> is showing <strong>upward momentum</strong> based on overall price change.
+                    {% elif pc < -2 %}
+                        Over this range, <strong>{{ ticker }}</strong> is showing <strong>downward pressure</strong> based on overall price change.
+                    {% else %}
+                        Over this range, <strong>{{ ticker }}</strong> is moving <strong>mostly sideways</strong> with modest net change.
+                    {% endif %}
+                </p>
+                <p class="insight-follow">
+                    {% if analysis.volatility > 3 %}
+                        Volatility (~{{ analysis.volatility }}%) suggests <strong>higher day-to-day price swings</strong> than quieter names.
+                    {% else %}
+                        Volatility (~{{ analysis.volatility }}%) suggests <strong>relatively stable</strong> day-to-day movement for this window.
+                    {% endif %}
+                </p>
+                <p class="insight-meta muted">
+                    Summary uses closing prices from your cached CSV. Not investment advice.
+                </p>
+            </div>
+        </section>
+    </aside>
+</div>
 {% endblock %}

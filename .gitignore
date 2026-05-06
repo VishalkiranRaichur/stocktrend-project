@@ -15,4 +15,4 @@ data/
 .vscode/
 .idea/
 
-stocktrend/static/plots/
+stocktrend/static/plots/.DS_Store
