@@ -31,6 +31,7 @@
                     <th>Range</th>
                     <th>Rows</th>
                     <th>Fetched</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +45,14 @@
                         <td>{{ entry.range_label }}</td>
                         <td>{{ entry.rows }}</td>
                         <td>{{ entry.fetched_at.strftime("%Y-%m-%d %H:%M") }}</td>
+                        <td class="row-actions">
+                            <form method="POST" action="{{ url_for('home.refresh', ticker=entry.ticker, range_key=entry.range_key) }}">
+                                <button type="submit" class="btn-secondary">Refresh</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('home.delete', ticker=entry.ticker, range_key=entry.range_key) }}" onsubmit="return confirm('Delete {{ entry.ticker }} ({{ entry.range_label }})?');">
+                                <button type="submit" class="btn-danger">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                     {% endfor %}
             </tbody>
