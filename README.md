@@ -8,7 +8,7 @@ StockTrend is a modern Flask-based stock analytics dashboard that allows users t
 
 ## Dashboard Preview
 
-![StockTrend Dashboard](assets/screenshots/dashboard.png)
+![StockTrend Dashboard](stocktrend/assets/screenshots/dashboard.png)
 
 ---
 
@@ -40,13 +40,13 @@ StockTrend is a modern Flask-based stock analytics dashboard that allows users t
 ## Screenshots
 
 ### Home Dashboard
-![Home Dashboard](assets/screenshots/dashboard.png)
+![StockTrend Dashboard](stocktrend/assets/screenshots/dashboard.png)
 
 ### Analytics Detail Page
-![Analytics Page](assets/screenshots/analyticspage.png)
+![Analytics Page](stocktrend/assets/screenshots/analyticspage.png)
 
 ### Stock Comparison Page
-![Compare Page](assets/screenshots/comparepage.png)
+![Compare Page](stocktrend/assets/screenshots/comparepage.png)
 
 ---
 
