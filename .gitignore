@@ -16,3 +16,6 @@ data/
 .idea/
 
 stocktrend/static/plots/.DS_Store
+
+.DS_Store
+stocktrend/static/plots/
