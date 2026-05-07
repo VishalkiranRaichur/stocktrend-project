@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Compare · StockTrend{% endblock %}
+
+{% block app_shell_class %} app-shell--detail{% endblock %}
+
+{% block top_nav_links %}
+<a href="{{ url_for('home.home') }}" class="nav-link nav-link-back">← Back to Dashboard</a>
+{% endblock %}
+
+{% block content %}
+<section class="page-hero compare-page-hero">
+    <p class="eyebrow">Side-by-side</p>
+    <h1 class="page-title">Stock Comparison</h1>
+    <p class="page-lede">Normalized prices start at 100, so this compares relative growth instead of raw price.</p>
+</section>
+
+<section class="card compare-pair-card" aria-label="Symbols being compared">
+    <div class="compare-pair-row">
+        <div class="compare-pair-block">
+            <p class="compare-pair-symbol">{{ ticker_a }}</p>
+            <p class="compare-pair-range"><span class="range-pill">{{ range_label_a }}</span></p>
+        </div>
+        <span class="compare-pair-vs" aria-hidden="true">vs</span>
+        <div class="compare-pair-block">
+            <p class="compare-pair-symbol">{{ ticker_b }}</p>
+            <p class="compare-pair-range"><span class="range-pill">{{ range_label_b }}</span></p>
+        </div>
+    </div>
+    <p class="compare-align-note muted">{{ align_note }}</p>
+</section>
+
+<div class="compare-metrics-grid">
+    <section class="card compare-metric-card">
+        <h3 class="detail-aside-heading">{{ ticker_a }}</h3>
+        <ul class="compare-metric-list">
+            <li><span class="compare-metric-label">Latest close</span> <span class="compare-metric-value">${{ analysis_a.latest_price }}</span></li>
+            <li><span class="compare-metric-label">Percent change</span> <span class="compare-metric-value">{{ analysis_a.percent_change }}%</span></li>
+            <li><span class="compare-metric-label">Volatility</span> <span class="compare-metric-value">{{ analysis_a.volatility }}%</span></li>
+        </ul>
+    </section>
+    <section class="card compare-metric-card">
+        <h3 class="detail-aside-heading">{{ ticker_b }}</h3>
+        <ul class="compare-metric-list">
+            <li><span class="compare-metric-label">Latest close</span> <span class="compare-metric-value">${{ analysis_b.latest_price }}</span></li>
+            <li><span class="compare-metric-label">Percent change</span> <span class="compare-metric-value">{{ analysis_b.percent_change }}%</span></li>
+            <li><span class="compare-metric-label">Volatility</span> <span class="compare-metric-value">{{ analysis_b.volatility }}%</span></li>
+        </ul>
+    </section>
+</div>
+
+<section class="card insight-card compare-insight" aria-labelledby="compare-insight-heading">
+    <h2 id="compare-insight-heading" class="insight-title">Quick read</h2>
+    <p class="compare-insight-text">{{ insight }}</p>
+</section>
+
+<section class="detail-chart-shell card card--chart-focus compare-chart-card" aria-labelledby="chart-heading">
+    <header class="chart-card-header">
+        <div>
+            <h2 id="chart-heading" class="chart-card-title">Normalized price paths</h2>
+            <p class="chart-card-sub">Indexed to 100 on the first aligned point · hover for values</p>
+        </div>
+    </header>
+    <div class="chart-figure chart-figure--plotly compare-chart-body">
+        <div class="plotly-chart-host" role="img" aria-label="Comparison chart {{ ticker_a }} versus {{ ticker_b }}">
+            {{ plot_chart_html|safe }}
+        </div>
+    </div>
+</section>
+{% endblock %}

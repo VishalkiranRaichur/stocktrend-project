@@ -2,25 +2,132 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}StockTrend{% endblock %}</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem("stocktrend-theme");
+                var theme = saved === "light" ? "light" : "dark";
+                document.documentElement.setAttribute("data-theme", theme);
+            } catch (e) {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <header>
-        <h1><a href="{{ url_for('home.home')}}">StockTrend</a></h1>     
-    </header>
-    <main>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flashes">
-                {% for category, message in messages %}
-                    <li class="flash flash-{{ category}}">{{ message}}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
+<body class="app-body">
+    <div class="app-shell{% block app_shell_class %}{% endblock %}">
+        <header class="top-nav">
+            <a href="{{ url_for('home.home') }}" class="brand">
+                <span class="brand-mark" aria-hidden="true"></span>
+                <span class="brand-name">StockTrend</span>
+            </a>
+            <nav class="nav-links" aria-label="Primary">
+                {% block top_nav_links %}
+                <a href="{{ url_for('home.home') }}" class="nav-link">Dashboard</a>
+                {% endblock %}
+                <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <span class="theme-toggle-icon" aria-hidden="true">◐</span>
+                    <span class="theme-toggle-text" id="theme-toggle-text">Theme</span>
+                </button>
+            </nav>
+        </header>
 
-        {% block content %}{% endblock %}
-    </main>
+        <main class="main-content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flashes" role="status">
+                    {% for category, message in messages %}
+                        <li class="flash flash-{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <span>StockTrend · local analytics</span>
+        </footer>
+    </div>
+    <script>
+        (function () {
+            var STORAGE_KEY = "stocktrend-theme";
+
+            function getTheme() {
+                var t = document.documentElement.getAttribute("data-theme");
+                return t === "light" ? "light" : "dark";
+            }
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute("data-theme", theme);
+                try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) {}
+                updateToggle(theme);
+                applyPlotlyTheme(theme);
+            }
+
+            function updateToggle(theme) {
+                var text = document.getElementById("theme-toggle-text");
+                if (!text) return;
+                text.textContent = theme === "light" ? "Light" : "Dark";
+            }
+
+            function relayoutOnePlot(el, theme) {
+                if (!window.Plotly || !el) return;
+                var isLight = theme === "light";
+                var paper = isLight ? "#f4f6fb" : "#141414";
+                var plot = isLight ? "#ffffff" : "#141414";
+                var font = isLight ? "#0b1220" : "#d4d4d4";
+                var grid = isLight ? "rgba(11,18,32,0.12)" : "rgba(61,61,61,0.6)";
+                var axisLine = isLight ? "rgba(11,18,32,0.22)" : "#333333";
+
+                window.Plotly.relayout(el, {
+                    paper_bgcolor: paper,
+                    plot_bgcolor: plot,
+                    "font.color": font,
+                    "xaxis.gridcolor": grid,
+                    "yaxis.gridcolor": grid,
+                    "xaxis.linecolor": axisLine,
+                    "yaxis.linecolor": axisLine,
+                });
+            }
+
+            function applyPlotlyTheme(theme) {
+                var plots = document.querySelectorAll(".js-plotly-plot");
+                if (!plots || plots.length === 0) return;
+                plots.forEach(function (p) { relayoutOnePlot(p, theme); });
+            }
+
+            function applyPlotlyThemeWithRetry(theme) {
+                var tries = 0;
+                var timer = setInterval(function () {
+                    tries += 1;
+                    applyPlotlyTheme(theme);
+                    if (tries >= 10) clearInterval(timer);
+                    if (document.querySelectorAll(".js-plotly-plot").length > 0 && window.Plotly) {
+                        if (tries >= 2) clearInterval(timer);
+                    }
+                }, 250);
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var btn = document.getElementById("theme-toggle");
+                updateToggle(getTheme());
+                applyPlotlyThemeWithRetry(getTheme());
+                if (!btn) return;
+                btn.addEventListener("click", function () {
+                    var next = getTheme() === "light" ? "dark" : "light";
+                    setTheme(next);
+                });
+            });
+        })();
+    </script>
+    {% block page_scripts %}{% endblock %}
 </body>
 </html>

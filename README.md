@@ -1,30 +1,89 @@
-# StockTrend: Stock Data Analysis and Visualization Tool
+# StockTrend
 
-## Authors
-Vishalkiran Raichur  
-Ahmed Sonmez
+Modern Stock Analytics Dashboard
 
-## Project Description
-StockTrend is a Python-based application that allows users to fetch real-time and historical stock market data from the internet. Users can input a stock ticker symbol and select a date range through an interactive graphical interface. The program organizes the retrieved data into structured files stored locally, making it easy to access and reuse. It then performs statistical analysis to identify trends and patterns in stock performance. Finally, the application generates clear visualizations so users can quickly understand how a stock has behaved over time.
+StockTrend is a modern Flask-based stock analytics dashboard that allows users to fetch, analyze, and compare historical stock market data through an interactive and responsive interface.
 
-## Project Outline / Plan
-- Build a Python interface using Tkinter or Flask
-- Fetch stock data from an online API
-- Store data in CSV format
-- Perform analysis using Python libraries
-- Visualize data using graphs (matplotlib)
+---
 
-## Interface Plan
-- Home screen with input box for stock ticker
-- Dropdown for selecting date range
-- Button to fetch data
-- Second screen to display statistics and graphs
+## Dashboard Preview
 
-## Data Collection and Storage Plan (Ahmed)
-- Fetch historical stock price data from a freely available online source
-- Validate user inputs and handle errors gracefully within the interface
-- Save the downloaded data locally in a structured file format for later use
-- Avoid redundant downloads by checking if data has already been saved
+![StockTrend Dashboard](stocktrend/assets/screenshots/dashboard.png)
 
-## Data Analysis and Visualization Plan (Vishalkiran)
-The program will analyze stock data by calculating average price, daily returns, and trends over time. It will also identify increases or decreases in stock performance. For visualization, matplotlib will be used to generate line graphs showing stock price changes and moving averages.
+---
+
+## Features
+
+- Fetch historical OHLCV stock market data
+- Interactive Plotly visualizations
+- Stock comparison dashboard
+- Moving averages and volatility analysis
+- Market insight summaries
+- Dark and light mode support
+- Local CSV caching system
+- Delete cached stocks from library
+- Responsive modern UI
+
+---
+
+## Tech Stack
+
+- Python
+- Flask
+- Pandas
+- Plotly
+- HTML/CSS
+- JavaScript
+
+---
+
+## Screenshots
+
+### Home Dashboard
+![StockTrend Dashboard](stocktrend/assets/screenshots/dashboard.png)
+
+### Analytics Detail Page
+![Analytics Page](stocktrend/assets/screenshots/analyticspage.png)
+
+### Stock Comparison Page
+![Compare Page](stocktrend/assets/screenshots/comparepage.png)
+
+---
+
+## Team Contributions
+
+### Ahmed Sonmez
+- Data fetching system
+- API integration
+- CSV caching/storage
+
+### Vishalkiran Raichur
+- UI/UX design
+- Analytics dashboard
+- Plotly chart integration
+- Stock comparison feature
+- Dark/light mode
+- Frontend improvements
+
+---
+
+#Installation
+
+gitclone ...
+cd stocktrend-project
+
+python -m venv venv
+source venv/bin/activate
+
+pip install -r requirements.txt
+python run.py
+
+---
+
+#Future Improvements
+
+- Real-time stock streaming
+- AI-based forecasting
+- Portfolio tracking
+- Export charts as images
+- Mobile optimization

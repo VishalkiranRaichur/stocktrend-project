@@ -15,4 +15,11 @@ data/
 .vscode/
 .idea/
 
+<<<<<<< HEAD
 stocktrend/static/plots/
+=======
+stocktrend/static/plots/.DS_Store
+
+.DS_Store
+stocktrend/static/plots/
+>>>>>>> 8d6ecce079896eb614fe851e860c65c940be043c
