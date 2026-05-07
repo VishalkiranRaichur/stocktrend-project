@@ -50,18 +50,6 @@ StockTrend is a modern Flask-based stock analytics dashboard that allows users t
 
 ---
 
-## Installation
-
-```bash
-git clone <your-repository-link>
-cd stocktrend-project
-
-python -m venv venv
-source venv/bin/activate
-
-pip install -r requirements.txt
-python run.py
-
 ## Team Contributions
 
 ### Ahmed Sonmez
@@ -77,7 +65,22 @@ python run.py
 - Dark/light mode
 - Frontend improvements
 
-## Future Improvements
+---
+
+#Installation
+
+gitclone ...
+cd stocktrend-project
+
+python -m venv venv
+source venv/bin/activate
+
+pip install -r requirements.txt
+python run.py
+
+---
+
+#Future Improvements
 
 - Real-time stock streaming
 - AI-based forecasting
