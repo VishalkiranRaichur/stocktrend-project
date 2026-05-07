@@ -129,9 +129,10 @@ def compare_view():
 def delete(ticker, range_key):
     ticker = ticker.upper()
     if delete_csv(ticker, range_key):
-        flash(f"Deleted {ticker} ({range_key}).", "success")
+        label = RANGE_PRESETS.get(range_key, {}).get("label", range_key)
+        flash(f"Deleted {ticker} ({label}) from cached library.", "success")
     else:
-        flash(f"No cached data for {ticker} ({range_key}).", "error")
+        flash("Could not delete cached dataset.", "error")
     return redirect(url_for("home.home"))
 
 @home_bp.route("/refresh/<ticker>/<range_key>", methods=["POST"])

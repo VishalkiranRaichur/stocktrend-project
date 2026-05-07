@@ -95,6 +95,7 @@
                         <th>Range</th>
                         <th class="num">Rows</th>
                         <th>Fetched</th>
+                        <th class="num">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -112,6 +113,21 @@
                             <td class="num">{{ entry.rows }}</td>
                             <td class="muted">
                                 {{ entry.fetched_at.strftime("%Y-%m-%d %H:%M") }}
+                            </td>
+                            <td class="actions-cell">
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('home.delete', ticker=entry.ticker, range_key=entry.range_key) }}"
+                                    onsubmit="return confirm('Delete {{ entry.ticker }} ({{ entry.range_label }}) from cached library?');"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="icon-btn icon-btn--danger"
+                                        aria-label="Delete {{ entry.ticker }} {{ entry.range_label }}"
+                                    >
+                                        <span aria-hidden="true">🗑</span>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     {% endfor %}

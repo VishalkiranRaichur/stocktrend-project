@@ -17,6 +17,10 @@
     --accent-negative: #ff8a9a;
     --accent-positive: var(--accent-mint);
 
+    /* Shared danger (used for delete icon buttons) */
+    --danger-bg: rgba(255, 138, 154, 0.10);
+    --danger-border: rgba(255, 138, 154, 0.28);
+
     --bg-grad-1: rgba(194, 244, 255, 0.08);
     --bg-grad-2: rgba(198, 192, 255, 0.05);
 
@@ -56,6 +60,9 @@ html[data-theme="light"] {
     --accent-mint: #16a34a;
     --accent-negative: #dc2626;
     --accent-positive: var(--accent-mint);
+
+    --danger-bg: rgba(220, 38, 38, 0.10);
+    --danger-border: rgba(220, 38, 38, 0.25);
 
     --bg-grad-1: rgba(14, 165, 183, 0.16);
     --bg-grad-2: rgba(79, 70, 229, 0.10);
@@ -603,6 +610,50 @@ html[data-theme="light"] .theme-toggle {
     background: rgba(198, 192, 255, 0.1);
     border-radius: 999px;
     border: 1px solid rgba(198, 192, 255, 0.2);
+}
+
+.actions-cell {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        transform 0.18s ease,
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease;
+}
+
+.icon-btn:active {
+    transform: scale(0.98);
+}
+
+.icon-btn--danger {
+    color: var(--accent-negative);
+    background: var(--danger-bg);
+    border-color: var(--danger-border);
+}
+
+.icon-btn--danger:hover {
+    background: rgba(220, 38, 38, 0.14);
+    border-color: rgba(220, 38, 38, 0.35);
+    transform: translateY(-1px);
+}
+
+.icon-btn--danger:focus-visible {
+    outline: 3px solid rgba(194, 244, 255, 0.22);
+    outline-offset: 2px;
 }
 
 .muted {
