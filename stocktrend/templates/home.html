@@ -117,8 +117,23 @@
                             <td class="actions-cell">
                                 <form
                                     method="POST"
+                                    action="{{ url_for('home.refresh', ticker=entry.ticker, range_key=entry.range_key) }}"
+                                    style="display:inline;"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="icon-btn icon-btn--neutral"
+                                        aria-label="Refresh {{ entry.ticker }} {{ entry.range_label }}"
+                                        title="Re-fetch and overwrite"
+                                    >
+                                        <span aria-hidden="true">↻</span>
+                                    </button>
+                                </form>
+                                <form
+                                    method="POST"
                                     action="{{ url_for('home.delete', ticker=entry.ticker, range_key=entry.range_key) }}"
                                     onsubmit="return confirm('Delete {{ entry.ticker }} ({{ entry.range_label }}) from cached library?');"
+                                    style="display:inline;"
                                 >
                                     <button
                                         type="submit"

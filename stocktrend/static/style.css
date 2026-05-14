@@ -639,6 +639,23 @@ html[data-theme="light"] .theme-toggle {
     transform: scale(0.98);
 }
 
+.icon-btn--neutral {
+    color: var(--accent-sky);
+    background: rgba(14, 165, 183, 0.10);
+    border-color: rgba(14, 165, 183, 0.28);
+}
+
+.icon-btn--neutral:hover {
+    background: rgba(14, 165, 183, 0.18);
+    border-color: rgba(14, 165, 183, 0.45);
+    transform: translateY(-1px);
+}
+
+.icon-btn--neutral:focus-visible {
+    outline: 3px solid rgba(194, 244, 255, 0.22);
+    outline-offset: 2px;
+}
+
 .icon-btn--danger {
     color: var(--accent-negative);
     background: var(--danger-bg);
